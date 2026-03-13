@@ -10,10 +10,10 @@ import { LinkCreatorCard } from "@/models/shared/components/link-creator-card";
 export function CashbackPage() {
   return (
     <SharedPageWithModals currentPath={APP_ROUTES.cashback} Shell={AppShell}>
-      {({ openCreate, openConfig }) => (
+      {({ openCreate, openConfig, createLinkSection }) => (
         <>
           <WelcomeBanner onOpenConfig={openConfig} />
-          <LinkCreatorCard onOpenCreate={openCreate} />
+          <LinkCreatorCard onOpenCreate={openCreate}>{createLinkSection}</LinkCreatorCard>
 
           <section className="mt-8 space-y-6">
             <div className="text-[3rem] font-black tracking-[-0.05em] text-slate-900">Lich su hoan tien</div>

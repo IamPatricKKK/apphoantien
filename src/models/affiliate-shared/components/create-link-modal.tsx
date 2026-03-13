@@ -1,99 +1,56 @@
 import type { FormEventHandler } from "react";
 import { CopyIcon, BrandShopIcon, CartIcon, MoneyIcon, PasteIcon, QrIcon, TagIcon } from "./icons";
-import { ModalFrame } from "./common";
 
 type CreateLinkModalProps = {
-  isOpen: boolean;
   hasGeneratedLink: boolean;
   shopeeLink: string;
+  subId: string;
   loading: boolean;
   error: string;
   statusMessage: string;
   affiliateLink: string;
+  encodedProductUrl: string;
+  generatedSubId: string;
   productName: string;
   commissionRate: string;
-  onClose: () => void;
   onChangeLink: (value: string) => void;
+  onChangeSubId: (value: string) => void;
   onSubmit: FormEventHandler<HTMLFormElement>;
   onPaste: () => void;
   onCopy: () => void;
 };
 
 export function CreateLinkModal({
-  isOpen,
   hasGeneratedLink,
   shopeeLink,
+  subId,
   loading,
   error,
   statusMessage,
   affiliateLink,
+  encodedProductUrl,
+  generatedSubId,
   productName,
   commissionRate,
-  onClose,
   onChangeLink,
+  onChangeSubId,
   onSubmit,
   onPaste,
   onCopy,
 }: CreateLinkModalProps) {
-  if (!isOpen) {
-    return null;
-  }
-
   const primaryProductName = productName || "Chuot gaming Rawm Leviathan V4";
-  const primaryCommission = commissionRate || "1.6%";
 
   return (
-    <ModalFrame
-      title="Tao link hoan tien Shopee"
-      onClose={onClose}
-      footer={
-        hasGeneratedLink ? (
-          <div className="flex flex-wrap justify-between gap-3">
-            <button
-              type="button"
-              className="inline-flex items-center gap-3 rounded-[18px] border border-[#d8dee8] bg-white px-6 py-4 text-lg font-bold text-slate-600 transition hover:border-[#ff6a00] hover:text-[#ff6a00]"
-            >
-              <QrIcon />
-              Hien QR
-            </button>
-            <button
-              type="button"
-              className="inline-flex items-center gap-3 rounded-[18px] bg-[#ff6a00] px-6 py-4 text-lg font-bold text-white transition hover:bg-[#ea6100]"
-            >
-              <CartIcon />
-              Mua ngay
-            </button>
-          </div>
-        ) : (
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-[18px] border border-[#d8dee8] bg-white px-7 py-4 text-lg font-bold text-slate-500 transition hover:border-slate-400"
-            >
-              Dong
-            </button>
-            <button
-              type="submit"
-              form="create-link-form"
-              disabled={loading}
-              className="rounded-[18px] bg-[#ff6a00] px-7 py-4 text-lg font-bold text-white transition hover:bg-[#ea6100] disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading ? "Dang tao..." : "Tao lien ket"}
-            </button>
-          </div>
-        )
-      }
-    >
+    <div id="affiliate-create-section" className="rounded-[24px] border border-[#dfe5ee] bg-[#fbfcfd] p-5">
       <div className="flex items-center gap-5 border-b border-[#e5e8ee] pb-5">
         <div className="grid h-16 w-16 place-items-center rounded-2xl bg-[#ff6a00] text-white">
           <BrandShopIcon />
         </div>
         <div>
           <div className="text-lg font-semibold text-slate-500">
-            Hoa hong: <span className="font-black text-[#ff6a00]">2-8%</span>
+            Affiliate ID: <span className="font-black text-[#ff6a00]">17348660462</span>
           </div>
-          <div className="mt-1 text-slate-500">Thoi gian: 7-14 ngay ke tu ngay giao hang thanh cong</div>
+          <div className="mt-1 text-slate-500">Tao link affiliate theo cong thuc Shopee redirect</div>
         </div>
       </div>
 
@@ -102,6 +59,7 @@ export function CreateLinkModal({
         <div className="mt-3 flex flex-col gap-3 md:flex-row">
           <div className="flex min-h-16 flex-1 items-center rounded-[20px] border border-[#d9dee8] bg-[#f9fbfd] px-4">
             <input
+              id="affiliate-product-link-input"
               value={shopeeLink}
               onChange={(e) => onChangeLink(e.target.value)}
               placeholder="https://shopee.vn/..."
@@ -125,6 +83,28 @@ export function CreateLinkModal({
 
         <div className="mt-4 rounded-[18px] border border-[#f0cb54] bg-[#fff7dc] px-4 py-3 text-sm font-medium leading-6 text-[#cb6a00]">
           Luu y: Hay mua hang ngay tu lien ket, khong click vao link shopee tu cac nen tang khac hoac livestream de tranh rot don hang
+        </div>
+
+        <div className="mt-5">
+          <label className="text-[1.1rem] font-black text-slate-900">sub_id</label>
+          <input
+            value={subId}
+            onChange={(e) => onChangeSubId(e.target.value)}
+            placeholder="Nhap sub_id, neu de trong se dung default"
+            className="mt-3 min-h-16 w-full rounded-[20px] border border-[#d9dee8] bg-[#f9fbfd] px-4 text-[1.05rem] font-medium text-slate-800 outline-none transition focus:border-[#ff6a00]"
+          />
+          <div className="mt-2 text-sm text-slate-500">Mac dinh se la default neu ban khong nhap sub_id.</div>
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-3">
+          <button
+            type="submit"
+            form="create-link-form"
+            disabled={loading}
+            className="rounded-[18px] bg-[#ff6a00] px-7 py-4 text-lg font-bold text-white transition hover:bg-[#ea6100] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading ? "Dang tao..." : "Tao lien ket"}
+          </button>
         </div>
       </form>
 
@@ -153,22 +133,22 @@ export function CreateLinkModal({
 
               <div>
                 <div className="text-[1.6rem] font-black tracking-[-0.04em] text-slate-900">{primaryProductName}</div>
-                <div className="mt-2 text-[1.7rem] font-black text-slate-800">1.570.000 d</div>
+                <div className="mt-2 text-[1.1rem] font-semibold text-slate-500">{commissionRate}</div>
 
                 <div className="mt-5 overflow-hidden rounded-[22px] border border-[#dfe5ee]">
                   <div className="flex items-center justify-between border-b border-[#dfe5ee] px-5 py-4 text-[1.05rem] font-semibold text-slate-600">
                     <span className="inline-flex items-center gap-2">
                       <TagIcon />
-                      Hoa hong co ban ({primaryCommission})
+                      sub_id ap dung
                     </span>
-                    <span className="font-black text-[#ff6a00]">+d25.000</span>
+                    <span className="font-black text-[#ff6a00]">{generatedSubId}</span>
                   </div>
                   <div className="flex items-center justify-between bg-[#edf8ef] px-5 py-4 text-[1.2rem] font-black text-[#2aa251]">
                     <span className="inline-flex items-center gap-2">
                       <MoneyIcon />
-                      Tong hoan tien
+                      origin_link da encode
                     </span>
-                    <span>25.000d</span>
+                    <span className="max-w-[240px] truncate text-right text-base">{encodedProductUrl}</span>
                   </div>
                 </div>
               </div>
@@ -193,6 +173,24 @@ export function CreateLinkModal({
           </div>
         </div>
       )}
-    </ModalFrame>
+      {hasGeneratedLink && (
+        <div className="mt-5 flex flex-wrap justify-between gap-3 border-t border-[#e5e8ee] pt-5">
+          <button
+            type="button"
+            className="inline-flex items-center gap-3 rounded-[18px] border border-[#d8dee8] bg-white px-6 py-4 text-lg font-bold text-slate-600 transition hover:border-[#ff6a00] hover:text-[#ff6a00]"
+          >
+            <QrIcon />
+            Hien QR
+          </button>
+          <button
+            type="button"
+            className="inline-flex items-center gap-3 rounded-[18px] bg-[#ff6a00] px-6 py-4 text-lg font-bold text-white transition hover:bg-[#ea6100]"
+          >
+            <CartIcon />
+            Mua ngay
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

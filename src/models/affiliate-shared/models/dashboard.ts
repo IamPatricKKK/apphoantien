@@ -18,8 +18,11 @@ export type StatCardItem = {
 
 export type DashboardState = {
   shopeeLink: string;
+  subId: string;
   curlText: string;
   affiliateLink: string;
+  encodedProductUrl: string;
+  generatedSubId: string;
   productName: string;
   commissionRate: string;
   loading: boolean;
@@ -27,6 +30,5 @@ export type DashboardState = {
   error: string;
   statusMessage: string;
   configStatus: ConfigStatus;
-  isCreateModalOpen: boolean;
   isConfigModalOpen: boolean;
 };

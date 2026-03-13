@@ -1,9 +1,16 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { MarketplaceBadge } from "@/models/affiliate-shared/components/common";
 import { LinkIcon, PasteIcon } from "@/models/affiliate-shared/components/icons";
 
-export function LinkCreatorCard({ onOpenCreate }: { onOpenCreate: () => void }) {
+export function LinkCreatorCard({
+  onOpenCreate,
+  children,
+}: {
+  onOpenCreate: () => void;
+  children?: ReactNode;
+}) {
   return (
     <section className="mt-8 rounded-[28px] border border-[#ecd6c9] bg-white p-6 shadow-[0_20px_60px_rgba(96,64,32,0.08)]">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
@@ -47,6 +54,8 @@ export function LinkCreatorCard({ onOpenCreate }: { onOpenCreate: () => void }) 
         <MarketplaceBadge className="bg-[#4734ff] text-white">LZ</MarketplaceBadge>
         <MarketplaceBadge className="bg-[#dbdbdb] text-slate-500">T</MarketplaceBadge>
       </div>
+
+      {children && <div className="mt-6 border-t border-[#edf1f5] pt-6">{children}</div>}
     </section>
   );
 }

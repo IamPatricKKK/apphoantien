@@ -10,6 +10,7 @@ type SharedPageProps = {
   children: (actions: {
     openCreate: () => void;
     openConfig: () => void;
+    createLinkSection: ReactNode;
   }) => ReactNode;
   Shell: React.ComponentType<{
     currentPath: string;
@@ -20,32 +21,48 @@ type SharedPageProps = {
 
 export function SharedPageWithModals({ currentPath, children, Shell }: SharedPageProps) {
   const { state, actions } = useAffiliateDashboard();
+  const focusCreateSection = () => {
+    if (typeof document === "undefined") {
+      return;
+    }
+
+    document.getElementById("affiliate-create-section")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+    document.getElementById("affiliate-product-link-input")?.focus();
+  };
+
+  const createLinkSection = (
+    <CreateLinkModal
+      hasGeneratedLink={state.hasGeneratedLink}
+      shopeeLink={state.shopeeLink}
+      subId={state.subId}
+      loading={state.loading}
+      error={state.error}
+      statusMessage={state.statusMessage}
+      affiliateLink={state.affiliateLink}
+      encodedProductUrl={state.encodedProductUrl}
+      generatedSubId={state.generatedSubId}
+      productName={state.productName}
+      commissionRate={state.commissionRate}
+      onChangeLink={actions.setShopeeLink}
+      onChangeSubId={actions.setSubId}
+      onSubmit={actions.handleCreateLink}
+      onPaste={() => void actions.pasteFromClipboard()}
+      onCopy={() => void actions.copyText(state.affiliateLink, "Da sao chep link hoan tien.")}
+    />
+  );
 
   return (
     <>
       <Shell currentPath={currentPath} onOpenConfig={() => actions.setIsConfigModalOpen(true)}>
         {children({
-          openCreate: () => actions.setIsCreateModalOpen(true),
+          openCreate: focusCreateSection,
           openConfig: () => actions.setIsConfigModalOpen(true),
+          createLinkSection,
         })}
       </Shell>
-
-      <CreateLinkModal
-        isOpen={state.isCreateModalOpen}
-        hasGeneratedLink={state.hasGeneratedLink}
-        shopeeLink={state.shopeeLink}
-        loading={state.loading}
-        error={state.error}
-        statusMessage={state.statusMessage}
-        affiliateLink={state.affiliateLink}
-        productName={state.productName}
-        commissionRate={state.commissionRate}
-        onClose={() => actions.setIsCreateModalOpen(false)}
-        onChangeLink={actions.setShopeeLink}
-        onSubmit={actions.handleCreateLink}
-        onPaste={() => void actions.pasteFromClipboard()}
-        onCopy={() => void actions.copyText(state.affiliateLink, "Da sao chep link hoan tien.")}
-      />
 
       <ConfigModal
         isOpen={state.isConfigModalOpen}

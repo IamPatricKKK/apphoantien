@@ -11,7 +11,7 @@ import { LinkCreatorCard } from "@/models/shared/components/link-creator-card";
 export function DashboardPage() {
   return (
     <SharedPageWithModals currentPath={APP_ROUTES.dashboard} Shell={AppShell}>
-      {({ openCreate, openConfig }) => (
+      {({ openCreate, openConfig, createLinkSection }) => (
         <>
           <WelcomeBanner onOpenConfig={openConfig} />
 
@@ -21,7 +21,7 @@ export function DashboardPage() {
             ))}
           </section>
 
-          <LinkCreatorCard onOpenCreate={openCreate} />
+          <LinkCreatorCard onOpenCreate={openCreate}>{createLinkSection}</LinkCreatorCard>
 
           <section className="mt-8 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
             <div className="overflow-hidden rounded-[30px] border border-[#efe2d4] bg-[#fff5ea] shadow-[0_20px_60px_rgba(117,76,34,0.08)]">

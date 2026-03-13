@@ -8,10 +8,10 @@ import { LinkCreatorCard } from "@/models/shared/components/link-creator-card";
 export function ShoppingPage() {
   return (
     <SharedPageWithModals currentPath={APP_ROUTES.shopping} Shell={AppShell}>
-      {({ openCreate, openConfig }) => (
+      {({ openCreate, openConfig, createLinkSection }) => (
         <>
           <WelcomeBanner onOpenConfig={openConfig} />
-          <LinkCreatorCard onOpenCreate={openCreate} />
+          <LinkCreatorCard onOpenCreate={openCreate}>{createLinkSection}</LinkCreatorCard>
 
           <section className="mt-8">
             <div className="rounded-[30px] border border-[#efe2d4] bg-white p-8 shadow-[0_20px_60px_rgba(117,76,34,0.08)]">

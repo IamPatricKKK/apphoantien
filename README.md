@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shopee Affiliate Link Generator
 
-## Getting Started
+Cong cu nay tao link Shopee Affiliate ngay tren frontend theo cong thuc:
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```text
+https://s.shopee.vn/an_redir?origin_link=<encodedProductUrl>&affiliate_id=17348660462&sub_id=<subId>
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`affiliate_id` dang duoc co dinh la `17348660462`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Cach chay
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+yarn install
+yarn dev
+```
 
-## Learn More
+Mo `http://localhost:3000`.
 
-To learn more about Next.js, take a look at the following resources:
+## Chuc nang da lam
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Nhap link san pham Shopee goc
+- Nhap `sub_id`
+- Tu dong encode `origin_link`
+- Tao link affiliate ngay tren frontend
+- Neu `sub_id` rong thi tu dong gan `default`
+- Hien thi link ket qua de copy
+- Co validate:
+  - thieu link => bao loi
+  - link khong thuoc `shopee.vn` => bao loi
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Vi du test
 
-## Deploy on Vercel
+Input:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```text
+Link san pham:
+https://shopee.vn/S%E1%BB%AFa-ch%E1%BB%91ng-n%E1%BA%AFng-d%C6%B0%E1%BB%A1ng-da-Shiseido-GSC-Perfect-Sun-Protector-Lotion-SPF50-50ml-i.392896126.29179620490
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+sub_id:
+tiktok01
+```
+
+Ket qua mong doi:
+
+```text
+https://s.shopee.vn/an_redir?origin_link=https%3A%2F%2Fshopee.vn%2FS%25E1%25BB%25AFa-ch%25E1%25BB%2591ng-n%25E1%25BA%25AFng-d%25C6%25B0%25E1%25BB%25A1ng-da-Shiseido-GSC-Perfect-Sun-Protector-Lotion-SPF50-50ml-i.392896126.29179620490&affiliate_id=17348660462&sub_id=tiktok01
+```
+
+Neu bo trong `sub_id`, ket qua se dung:
+
+```text
+sub_id=default
+```

@@ -4,13 +4,23 @@ import type { FormEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { loadSavedCurlConfig, saveCurlConfig } from "../api/local-config";
 import { EMPTY_CONFIG_STATUS } from "../constants/dashboard";
-import { buildConfigStatus, createDemoAffiliateLink, inferProductName, isShopeeLink } from "../lib/affiliate-utils";
+import {
+  buildConfigStatus,
+  createShopeeAffiliateLink,
+  encodeShopeeProductUrl,
+  inferProductName,
+  isShopeeVnLink,
+  normalizeSubId,
+} from "../lib/affiliate-utils";
 import type { ConfigStatus } from "../models/dashboard";
 
 export function useAffiliateDashboard() {
   const [shopeeLink, setShopeeLink] = useState("");
+  const [subId, setSubId] = useState("");
   const [curlText, setCurlText] = useState("");
   const [affiliateLink, setAffiliateLink] = useState("");
+  const [encodedProductUrl, setEncodedProductUrl] = useState("");
+  const [generatedSubId, setGeneratedSubId] = useState("");
   const [productName, setProductName] = useState("");
   const [commissionRate, setCommissionRate] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,10 +28,9 @@ export function useAffiliateDashboard() {
   const [error, setError] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [configStatus, setConfigStatus] = useState<ConfigStatus>(EMPTY_CONFIG_STATUS);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
 
-  const isValidShopeeLink = useMemo(() => isShopeeLink(shopeeLink), [shopeeLink]);
+  const isValidShopeeLink = useMemo(() => isShopeeVnLink(shopeeLink), [shopeeLink]);
   const hasGeneratedLink = Boolean(affiliateLink);
 
   useEffect(() => {
@@ -63,6 +72,8 @@ export function useAffiliateDashboard() {
     setError("");
     setStatusMessage("");
     setAffiliateLink("");
+    setEncodedProductUrl("");
+    setGeneratedSubId("");
     setProductName("");
     setCommissionRate("");
 
@@ -72,7 +83,7 @@ export function useAffiliateDashboard() {
     }
 
     if (!isValidShopeeLink) {
-      setError("Link chua dung dinh dang Shopee.");
+      setError("Link can thuoc domain shopee.vn.");
       return;
     }
 
@@ -80,10 +91,13 @@ export function useAffiliateDashboard() {
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      setAffiliateLink(createDemoAffiliateLink(shopeeLink));
+      const normalizedSubId = normalizeSubId(subId);
+      setEncodedProductUrl(encodeShopeeProductUrl(shopeeLink));
+      setGeneratedSubId(normalizedSubId);
+      setAffiliateLink(createShopeeAffiliateLink(shopeeLink, normalizedSubId));
       setProductName(inferProductName(shopeeLink));
-      setCommissionRate("1.6%");
-      setStatusMessage("Da tao link demo tren giao dien. Backend va service da duoc go bo.");
+      setCommissionRate("Shopee Affiliate");
+      setStatusMessage(`Da tao link affiliate voi sub_id: ${normalizedSubId}.`);
     } finally {
       setLoading(false);
     }
@@ -110,8 +124,11 @@ export function useAffiliateDashboard() {
   return {
     state: {
       shopeeLink,
+      subId,
       curlText,
       affiliateLink,
+      encodedProductUrl,
+      generatedSubId,
       productName,
       commissionRate,
       loading,
@@ -119,15 +136,14 @@ export function useAffiliateDashboard() {
       error,
       statusMessage,
       configStatus,
-      isCreateModalOpen,
       isConfigModalOpen,
       isValidShopeeLink,
       hasGeneratedLink,
     },
     actions: {
       setShopeeLink,
+      setSubId,
       setCurlText,
-      setIsCreateModalOpen,
       setIsConfigModalOpen,
       handleSaveCurl,
       handleCreateLink,
