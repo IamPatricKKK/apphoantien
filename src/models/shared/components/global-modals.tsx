@@ -11,6 +11,7 @@ type SharedPageProps = {
     openCreate: () => void;
     openConfig: () => void;
     createLinkSection: ReactNode;
+    heroCreateLinkSection: ReactNode;
   }) => ReactNode;
   Shell: React.ComponentType<{
     currentPath: string;
@@ -42,15 +43,41 @@ export function SharedPageWithModals({ currentPath, children, Shell }: SharedPag
       error={state.error}
       statusMessage={state.statusMessage}
       affiliateLink={state.affiliateLink}
-      encodedProductUrl={state.encodedProductUrl}
-      generatedSubId={state.generatedSubId}
       productName={state.productName}
-      commissionRate={state.commissionRate}
+      productPrice={state.productPrice}
+      productImageUrl={state.productImageUrl}
+      productCommission={state.productCommission}
+      cashbackEstimate={state.cashbackEstimate}
       onChangeLink={actions.setShopeeLink}
       onChangeSubId={actions.setSubId}
       onSubmit={actions.handleCreateLink}
       onPaste={() => void actions.pasteFromClipboard()}
-      onCopy={() => void actions.copyText(state.affiliateLink, "Da sao chep link hoan tien.")}
+      onCopyLink={() => void actions.copyText(state.affiliateLink, "Da sao chep link affiliate.")}
+      onShareLink={() => void actions.shareLink(state.affiliateLink)}
+    />
+  );
+
+  const heroCreateLinkSection = (
+    <CreateLinkModal
+      variant="hero"
+      hasGeneratedLink={state.hasGeneratedLink}
+      shopeeLink={state.shopeeLink}
+      subId={state.subId}
+      loading={state.loading}
+      error={state.error}
+      statusMessage={state.statusMessage}
+      affiliateLink={state.affiliateLink}
+      productName={state.productName}
+      productPrice={state.productPrice}
+      productImageUrl={state.productImageUrl}
+      productCommission={state.productCommission}
+      cashbackEstimate={state.cashbackEstimate}
+      onChangeLink={actions.setShopeeLink}
+      onChangeSubId={actions.setSubId}
+      onSubmit={actions.handleCreateLink}
+      onPaste={() => void actions.pasteFromClipboard()}
+      onCopyLink={() => void actions.copyText(state.affiliateLink, "Da sao chep link affiliate.")}
+      onShareLink={() => void actions.shareLink(state.affiliateLink)}
     />
   );
 
@@ -61,6 +88,7 @@ export function SharedPageWithModals({ currentPath, children, Shell }: SharedPag
           openCreate: focusCreateSection,
           openConfig: () => actions.setIsConfigModalOpen(true),
           createLinkSection,
+          heroCreateLinkSection,
         })}
       </Shell>
 

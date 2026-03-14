@@ -1,43 +1,54 @@
 "use client";
 
+import { SummaryBand, HistoryTable, WithdrawalCards } from "@/models/affiliate-shared/components/history";
 import { APP_ROUTES } from "@/config/app-routes";
-import { CASHBACK_FILTERS } from "@/models/affiliate-shared/constants/dashboard";
-import { HistoryTable, SummaryBand } from "@/models/affiliate-shared/components/history";
 import { SharedPageWithModals } from "@/models/shared/components/global-modals";
-import { AppShell, WelcomeBanner } from "@/models/shared/components/app-shell";
-import { LinkCreatorCard } from "@/models/shared/components/link-creator-card";
+import { AppShell } from "@/models/shared/components/app-shell";
+
+const FILTERS = ["Tất cả giao dịch", "Đang chờ", "Đã xác nhận"] as const;
 
 export function CashbackPage() {
   return (
-    <SharedPageWithModals currentPath={APP_ROUTES.cashback} Shell={AppShell}>
-      {({ openCreate, openConfig, createLinkSection }) => (
-        <>
-          <WelcomeBanner onOpenConfig={openConfig} />
-          <LinkCreatorCard onOpenCreate={openCreate}>{createLinkSection}</LinkCreatorCard>
-
-          <section className="mt-8 space-y-6">
-            <div className="text-[3rem] font-black tracking-[-0.05em] text-slate-900">Lich su hoan tien</div>
-            <div className="rounded-full border border-[#d9dee8] bg-white px-5 py-4 text-slate-400 shadow-sm">
-              Tim kiem theo ma don hang hoac ten san pham...
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {CASHBACK_FILTERS.map((item, index) => (
-                <button
-                  key={item}
-                  type="button"
-                  className={`rounded-full border px-5 py-3 text-lg font-bold ${
-                    index === 0 ? "border-[#ff6a00] bg-[#ff6a00] text-white" : "border-[#d9dee8] bg-white text-slate-600"
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-            <SummaryBand />
+    <SharedPageWithModals currentPath={APP_ROUTES.wallet} Shell={AppShell}>
+      {() => (
+        <div className="space-y-8">
+          <section className="grid gap-6 md:grid-cols-2">
             <SummaryBand success />
+            <SummaryBand />
+          </section>
+
+          <section className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4 border-b border-[#f5cfe2] pb-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-wrap gap-6">
+                {FILTERS.map((filter, index) => (
+                  <button
+                    key={filter}
+                    className={`border-b-2 pb-3 pt-2 text-sm font-bold transition-colors ${
+                      index === 0 ? "border-[#ff6bb5] text-[#ff6bb5]" : "border-transparent text-slate-500 hover:text-[#ff6bb5]"
+                    }`}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+
+              <div className="relative">
+                <input
+                  className="w-full rounded-xl border border-[#f5cfe2] bg-white px-4 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-[#ff6bb5] md:w-72"
+                  placeholder="Tìm kiếm thương hiệu..."
+                  type="text"
+                />
+              </div>
+            </div>
+
             <HistoryTable />
           </section>
-        </>
+
+          <section>
+            <div className="mb-6 text-xl font-bold tracking-[-0.02em] text-slate-900">Hoạt động rút tiền</div>
+            <WithdrawalCards />
+          </section>
+        </div>
       )}
     </SharedPageWithModals>
   );

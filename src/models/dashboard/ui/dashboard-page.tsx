@@ -1,73 +1,133 @@
 "use client";
 
 import { APP_ROUTES } from "@/config/app-routes";
-import { STAT_CARDS } from "@/models/affiliate-shared/constants/dashboard";
-import { PanelCard, StatusChip } from "@/models/affiliate-shared/components/common";
-import { StatCard } from "@/models/affiliate-shared/components/stat-card";
 import { SharedPageWithModals } from "@/models/shared/components/global-modals";
-import { AppShell, WelcomeBanner } from "@/models/shared/components/app-shell";
+import { AppShell } from "@/models/shared/components/app-shell";
 import { LinkCreatorCard } from "@/models/shared/components/link-creator-card";
+
+const RECENT_LINKS = [
+  { shortLink: "hoantienvui.ly/abcd123", originalUrl: "shopee.vn/iphone-15-pro-max", clicks: 0, created: "Vừa xong" },
+  { shortLink: "hoantienvui.ly/fashion88", originalUrl: "shopee.vn/tui-xach-nu-cao-cap", clicks: 84, created: "2 giờ trước" },
+  { shortLink: "hoantienvui.ly/home24", originalUrl: "shopee.vn/noi-chien-khong-dau", clicks: 36, created: "Hôm qua" },
+] as const;
 
 export function DashboardPage() {
   return (
     <SharedPageWithModals currentPath={APP_ROUTES.dashboard} Shell={AppShell}>
-      {({ openCreate, openConfig, createLinkSection }) => (
-        <>
-          <WelcomeBanner onOpenConfig={openConfig} />
+      {({ openCreate, createLinkSection }) => (
+        <div className="space-y-8">
+          <section className="space-y-2">
+            <h1 className="text-3xl font-black tracking-[-0.04em] text-slate-900 md:text-4xl">Bảng điều khiển Affiliate</h1>
+            <p className="text-slate-500">Quản lý các link giới thiệu và theo dõi hoa hồng của bạn.</p>
+          </section>
 
-          <section className="mt-8 grid gap-4 md:grid-cols-3 xl:grid-cols-6">
-            {STAT_CARDS.map((card) => (
-              <StatCard key={card.label} {...card} />
+          <section className="overflow-hidden rounded-[32px] border-2 border-[#ffb9dc] bg-white p-1 shadow-[0_24px_70px_rgba(161,70,118,0.08)]">
+            <div className="rounded-[28px] bg-[#fff7fb] p-6 lg:p-8">
+              <div className="flex flex-col gap-8 lg:flex-row">
+                <div className="h-52 w-full shrink-0 overflow-hidden rounded-[24px] border border-[#f8ddea] bg-[linear-gradient(135deg,#ffd2e9,#fff7fb)] lg:w-52" />
+
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 text-[#ff6bb5]">
+                    <span className="text-lg">●</span>
+                    <span className="text-sm font-bold uppercase tracking-[0.2em]">Tạo link thành công</span>
+                  </div>
+                  <h2 className="mt-3 text-2xl font-black tracking-[-0.04em] text-slate-900">
+                    Apple iPhone 15 Pro Max - 256GB - Titanium
+                  </h2>
+                  <p className="mt-2 text-3xl font-black text-[#ff6bb5]">34,990,000d</p>
+
+                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-[#f3d8e5] bg-white p-4">
+                      <div className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">Total Shopee Commission</div>
+                      <div className="mt-2 text-xl font-black text-slate-900">1,574,550d</div>
+                    </div>
+                    <div className="rounded-2xl border border-[#f5cfe2] bg-[#fff0f8] p-4">
+                      <div className="text-xs font-bold uppercase tracking-[0.18em] text-[#ff6bb5]">Buyer Cashback 80%</div>
+                      <div className="mt-2 text-xl font-black text-[#ff6bb5]">1,259,640d</div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 rounded-2xl border border-[#f5cfe2] bg-white px-4 py-3 text-sm font-bold text-[#ff6bb5]">
+                    hoantienvui.ly/abcd123
+                  </div>
+                </div>
+
+                <div className="flex min-w-[180px] flex-col justify-center gap-3">
+                  <button className="rounded-2xl bg-[#ff6bb5] px-6 py-3 text-sm font-bold text-white shadow-[0_14px_34px_rgba(255,107,181,0.22)]">
+                    Mở sản phẩm
+                  </button>
+                  <button className="rounded-2xl border-2 border-[#ff6bb5] px-6 py-3 text-sm font-bold text-[#ff6bb5]">Sao chép link</button>
+                </div>
+              </div>
+
+              <div className="mt-8 border-t border-[#f7dce9] pt-6">
+                <div className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Chia sẻ qua</div>
+                <div className="mt-4 flex flex-wrap gap-4">
+                  {["Facebook", "Zalo", "WhatsApp", "Email"].map((item) => (
+                    <div key={item} className="flex flex-col items-center gap-2">
+                      <div className="grid h-12 w-12 place-items-center rounded-full bg-[#fff0f8] text-sm font-bold text-[#ff6bb5]">
+                        {item.slice(0, 1)}
+                      </div>
+                      <span className="text-xs font-medium text-slate-500">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="grid gap-6 sm:grid-cols-3">
+            {[
+              { label: "Tổng lượt click", value: "1,284", hint: "+12% tuần này" },
+              { label: "Lượt chuyển đổi", value: "42", hint: "Tỷ lệ 3.2%" },
+              { label: "Tổng thu nhập", value: "32,500,000₫", hint: "Rút tiền" },
+            ].map((item) => (
+              <div key={item.label} className="rounded-[24px] border border-[#f5cfe2] bg-white p-6 shadow-sm">
+                <div className="text-sm font-medium text-slate-500">{item.label}</div>
+                <div className="mt-2 text-3xl font-black tracking-[-0.03em] text-slate-900">{item.value}</div>
+                <div className="mt-3 text-xs font-bold text-[#ff6bb5]">{item.hint}</div>
+              </div>
             ))}
           </section>
 
           <LinkCreatorCard onOpenCreate={openCreate}>{createLinkSection}</LinkCreatorCard>
 
-          <section className="mt-8 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="overflow-hidden rounded-[30px] border border-[#efe2d4] bg-[#fff5ea] shadow-[0_20px_60px_rgba(117,76,34,0.08)]">
-              <div className="relative min-h-[420px] overflow-hidden px-8 py-10">
-                <div className="absolute right-[-80px] top-[-40px] h-72 w-72 rounded-full bg-[#ffe0bc]" />
-                <div className="absolute bottom-10 right-10 grid grid-cols-5 gap-4 opacity-70">
-                  {Array.from({ length: 20 }).map((_, index) => (
-                    <span key={index} className="h-2.5 w-2.5 rounded-full bg-[#f0b06d]" />
-                  ))}
-                </div>
-                <div className="relative z-10">
-                  <div className="text-[3rem] font-black tracking-[-0.05em] text-[#f47b20]">Hoan Tien Online</div>
-                  <div className="mt-10 max-w-2xl text-[4rem] font-black uppercase leading-[0.95] tracking-[-0.07em] text-[#1b140f] md:text-[5.3rem]">
-                    Moi ban tham gia kiem cashback.
-                  </div>
-                  <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
-                    Dashboard tong quan cho he thong, tach rieng thanh route doc lap.
-                  </p>
-                </div>
-              </div>
+          <section className="overflow-hidden rounded-[28px] border border-[#f5cfe2] bg-white shadow-[0_24px_70px_rgba(161,70,118,0.08)]">
+            <div className="flex items-center justify-between border-b border-[#f7dce9] px-6 py-5">
+              <h3 className="text-lg font-bold text-slate-900">Link gần đây</h3>
+              <button className="text-sm font-bold text-[#ff6bb5]">Xem tất cả</button>
             </div>
-
-            <div className="space-y-5">
-              <PanelCard title="Trang thai cau hinh" subtitle="Dang luu noi bo tren trinh duyet" accent="orange">
-                <div className="flex flex-wrap gap-2">
-                  <StatusChip label="Cookie" ok={false} />
-                  <StatusChip label="CSRF" ok={false} />
-                  <StatusChip label="X-Sap-Sec" ok={false} />
-                </div>
-                <button
-                  type="button"
-                  onClick={openConfig}
-                  className="mt-5 inline-flex rounded-full border border-[#ffd3bc] bg-[#fff2ea] px-5 py-3 text-sm font-bold text-[#ff6a00] transition hover:border-[#ff6a00]"
-                >
-                  Mo cau hinh cURL
-                </button>
-              </PanelCard>
-
-              <PanelCard title="Lich su yeu cau rut tien" subtitle="Chua co yeu cau rut tien nao" accent="neutral">
-                <div className="grid min-h-[180px] place-items-center rounded-[24px] border border-dashed border-[#d8dde7] bg-[#fbfcfd] text-center text-slate-400">
-                  Chua co yeu cau rut tien nao
-                </div>
-              </PanelCard>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-[#fff0f8] text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500">
+                  <tr>
+                    <th className="px-6 py-4">Link rút gọn</th>
+                    <th className="px-6 py-4">Link gốc</th>
+                    <th className="px-6 py-4">Lượt click</th>
+                    <th className="px-6 py-4">Ngày tạo</th>
+                    <th className="px-6 py-4 text-right">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#f8ddea]">
+                  {RECENT_LINKS.map((item, index) => (
+                    <tr key={item.shortLink} className={index === 0 ? "bg-[#fff7fb]" : ""}>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-[#ff6bb5]">{item.shortLink}</span>
+                          {index === 0 && <span className="rounded bg-[#ff6bb5] px-1.5 py-0.5 text-[10px] font-bold text-white">MỚI</span>}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-slate-500">{item.originalUrl}</td>
+                      <td className="px-6 py-4 text-sm font-medium text-slate-900">{item.clicks}</td>
+                      <td className="px-6 py-4 text-sm text-slate-500">{item.created}</td>
+                      <td className="px-6 py-4 text-right text-sm font-bold text-[#ff6bb5]">Sao chép</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
-        </>
+        </div>
       )}
     </SharedPageWithModals>
   );

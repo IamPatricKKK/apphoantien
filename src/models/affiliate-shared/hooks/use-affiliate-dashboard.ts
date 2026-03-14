@@ -7,8 +7,9 @@ import { EMPTY_CONFIG_STATUS } from "../constants/dashboard";
 import {
   buildConfigStatus,
   createShopeeAffiliateLink,
-  encodeShopeeProductUrl,
+  fetchShopeeProductData,
   inferProductName,
+  inferProductPrice,
   isShopeeVnLink,
   normalizeSubId,
 } from "../lib/affiliate-utils";
@@ -19,10 +20,11 @@ export function useAffiliateDashboard() {
   const [subId, setSubId] = useState("");
   const [curlText, setCurlText] = useState("");
   const [affiliateLink, setAffiliateLink] = useState("");
-  const [encodedProductUrl, setEncodedProductUrl] = useState("");
-  const [generatedSubId, setGeneratedSubId] = useState("");
   const [productName, setProductName] = useState("");
-  const [commissionRate, setCommissionRate] = useState("");
+  const [productPrice, setProductPrice] = useState("");
+  const [productImageUrl, setProductImageUrl] = useState("");
+  const [productCommission, setProductCommission] = useState("");
+  const [cashbackEstimate, setCashbackEstimate] = useState("");
   const [loading, setLoading] = useState(false);
   const [savingCurl, setSavingCurl] = useState(false);
   const [error, setError] = useState("");
@@ -72,10 +74,11 @@ export function useAffiliateDashboard() {
     setError("");
     setStatusMessage("");
     setAffiliateLink("");
-    setEncodedProductUrl("");
-    setGeneratedSubId("");
     setProductName("");
-    setCommissionRate("");
+    setProductPrice("");
+    setProductImageUrl("");
+    setProductCommission("");
+    setCashbackEstimate("");
 
     if (!shopeeLink.trim()) {
       setError("Vui long dan link Shopee.");
@@ -92,12 +95,26 @@ export function useAffiliateDashboard() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       const normalizedSubId = normalizeSubId(subId);
-      setEncodedProductUrl(encodeShopeeProductUrl(shopeeLink));
-      setGeneratedSubId(normalizedSubId);
       setAffiliateLink(createShopeeAffiliateLink(shopeeLink, normalizedSubId));
-      setProductName(inferProductName(shopeeLink));
-      setCommissionRate("Shopee Affiliate");
-      setStatusMessage(`Da tao link affiliate voi sub_id: ${normalizedSubId}.`);
+      setProductName("name Product");
+      setProductPrice("price");
+      setProductCommission("");
+      setCashbackEstimate("");
+
+      try {
+        const productData = await fetchShopeeProductData(shopeeLink);
+        setProductName(productData.productName || "name Product");
+        setProductPrice(productData.productPrice || "price");
+        setProductImageUrl(productData.productImageUrl || "");
+        setProductCommission(productData.productCommission || "");
+        setCashbackEstimate(productData.cashbackEstimate || "");
+      } catch {
+        setProductName(inferProductName(shopeeLink) || "name Product");
+        setProductPrice(inferProductPrice(shopeeLink) || "price");
+      }
+
+      // setStatusMessage(`Da tao link affiliate voi sub_id: ${normalizedSubId}.`);
+      setStatusMessage(`Da tao link affiliate thanh cong`);
     } finally {
       setLoading(false);
     }
@@ -109,6 +126,46 @@ export function useAffiliateDashboard() {
       setStatusMessage(message);
     } catch {
       setError("Khong the sao chep vao clipboard.");
+    }
+  }
+
+  async function shareLink(url: string) {
+    if (!url) {
+      setError("Chua co link affiliate de chia se.");
+      return;
+    }
+
+    try {
+      const browserNavigator = typeof globalThis !== "undefined" ? globalThis.navigator : undefined;
+
+      if (!browserNavigator) {
+        setError("Khong the chia se link luc nay.");
+        return;
+      }
+
+      const share = browserNavigator.share?.bind(browserNavigator);
+
+      if (share) {
+        await share({
+          title: "Hoantienvui.com",
+          text: "Link mua sam hoan tien cua ban",
+          url,
+        });
+        setStatusMessage("Da mo hop thoai chia se.");
+        return;
+      }
+
+      const clipboard = globalThis.navigator?.clipboard;
+
+      if (!clipboard) {
+        setError("Khong the chia se link luc nay.");
+        return;
+      }
+
+      await clipboard.writeText(url);
+      setStatusMessage("Da sao chep link affiliate de chia se.");
+    } catch {
+      setError("Khong the chia se link luc nay.");
     }
   }
 
@@ -127,10 +184,11 @@ export function useAffiliateDashboard() {
       subId,
       curlText,
       affiliateLink,
-      encodedProductUrl,
-      generatedSubId,
       productName,
-      commissionRate,
+      productPrice,
+      productImageUrl,
+      productCommission,
+      cashbackEstimate,
       loading,
       savingCurl,
       error,
@@ -148,6 +206,7 @@ export function useAffiliateDashboard() {
       handleSaveCurl,
       handleCreateLink,
       copyText,
+      shareLink,
       pasteFromClipboard,
     },
   };

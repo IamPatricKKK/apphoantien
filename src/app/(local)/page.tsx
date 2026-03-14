@@ -1,5 +1,5 @@
-import { DashboardPage } from "@/models/dashboard/ui/dashboard-page";
+import { ShoppingPage } from "@/models/shopping/ui/shopping-page";
 
 export default function HomePage() {
-  return <DashboardPage />;
+  return <ShoppingPage />;
 }
