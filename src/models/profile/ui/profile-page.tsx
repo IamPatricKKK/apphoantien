@@ -76,10 +76,10 @@ export function ProfilePage() {
 
             <div className="space-y-4">
               <h4 className="text-md font-bold text-slate-900">Tùy chỉnh thông báo</h4>
-              {[
+              {([
                 ["Thông báo qua Email", "Nhận cập nhật về tình trạng hoàn tiền của bạn", true],
                 ["Thông báo đẩy", "Nhận cảnh báo tức thì từ ứng dụng", false],
-              ].map(([title, description, enabled]) => (
+              ] as const).map(([title, description, enabled]) => (
                 <div key={title} className="flex items-center justify-between rounded-lg border border-[#f7dce9] bg-[#fff7fb] p-3">
                   <div>
                     <p className="text-sm font-bold">{title}</p>
